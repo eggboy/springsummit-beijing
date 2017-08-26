@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:gfe="http://www.springframework.org/schema/gemfire"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/gemfire
+	http://www.springframework.org/schema/gemfire/spring-gemfire.xsd">
+
+    <gfe:pool id="gemfirePool" subscription-enabled="true">
+        <gfe:locator host="localhost" port="15001"/>
+    </gfe:pool>
+    <gfe:client-cache pool-name="gemfirePool" copy-on-read="true"/>
+    <gfe:client-region id="ClusteredSpringSessions" shortcut="PROXY" pool-name="gemfirePool"/>
+    <gfe:client-region id="UserProfile" shortcut="PROXY" pool-name="gemfirePool"/>
+
+    <bean id="cacheManager" class="org.springframework.data.gemfire.support.GemfireCacheManager">
+        <property name="regions">
+            <set>
+                <ref bean="UserProfile"/>
+            </set>
+        </property>
+    </bean>
+</beans>
